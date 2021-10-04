@@ -103,14 +103,15 @@ workflow bmtbWorkflow {
         
         call run_cadd_editor {
             input:
-                in_vs_file=run_vcf2shebang.outputVS, # Not sure where this file comes from
+                in_vs_file=run_vcf2shebang.outputVS, 
                 in_cadd_output=run_merge_annotated_vcf.merged_cadd_output_vcf
         }
     }
+    
     # Run BMTB Candidate Analysis
     call run_bmtb {
         input:
-            in_vs_file=run_cadd_editor.cadd_editor_output_vs,
+            in_vs_file=select_first([run_cadd_editor.cadd_editor_output_vs, run_vcf2shebang.outputVS]),
             in_maternal_bam=MATERNAL_INPUT_BAM_FILE,
             in_maternal_bam_index=MATERNAL_INPUT_BAM_FILE_INDEX,
             in_paternal_bam=PATERNAL_INPUT_BAM_FILE,
