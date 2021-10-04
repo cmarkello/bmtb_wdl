@@ -313,7 +313,7 @@ task run_vcf2shebang {
     output {
         File outputVS = "vcf2shebang_output/~{in_proband_name}_unrolled_snpeff_fix_overlap_mono_shebang.vs"
         File outputCADDVCF = "vcf2shebang_output/~{in_proband_name}_unrolled_snpeff_fix_overlap_mono_CADD_Input_Files/~{in_proband_name}_unrolled_snpeff_fix_overlap_mono_CADD_input_file.txt.gz"
-        Boolean runCADD = ${cadd_input_available}
+        Boolean runCADD = "${cadd_input_available}"
     }
     runtime {
         memory: 100 + " GB"
