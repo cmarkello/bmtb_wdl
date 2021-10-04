@@ -301,19 +301,18 @@ task run_vcf2shebang {
         java -XX:+UnlockExperimentalVMOptions -XX:ActiveProcessorCount=8 -cp /vcftoshebang/VCFtoShebang.jar:/vcftoshebang/json_simple.jar Runner VCFtoShebang_Config.txt
         
         # Check for CADD input
-        cadd_input_available = "false"
+        echo "false" > vcf2shebang_output/cadd_input_available
         while IFS= read -r line
         do
             if [[ line != *"#"* ]]; then
-                cadd_input_available = "true"
+                echo "true" > vcf2shebang_output/cadd_input_available
             fi
         done < "vcf2shebang_output/~{in_proband_name}_unrolled_snpeff_fix_overlap_mono_CADD_Input_Files/~{in_proband_name}_unrolled_snpeff_fix_overlap_mono_CADD_input_file.txt.gz"
-        
     >>>
     output {
         File outputVS = "vcf2shebang_output/~{in_proband_name}_unrolled_snpeff_fix_overlap_mono_shebang.vs"
         File outputCADDVCF = "vcf2shebang_output/~{in_proband_name}_unrolled_snpeff_fix_overlap_mono_CADD_Input_Files/~{in_proband_name}_unrolled_snpeff_fix_overlap_mono_CADD_input_file.txt.gz"
-        Boolean runCADD = "${cadd_input_available}"
+        Boolean runCADD = read_boolean("vcf2shebang_output/cadd_input_available")
     }
     runtime {
         memory: 100 + " GB"
