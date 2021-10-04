@@ -111,7 +111,6 @@ workflow bmtbWorkflow {
     call run_bmtb {
         input:
             in_vs_file=run_cadd_editor.cadd_editor_output_vs,
-            in_config_file=INPUT_CONFIG_FILE,
             in_maternal_bam=MATERNAL_INPUT_BAM_FILE,
             in_maternal_bam_index=MATERNAL_INPUT_BAM_FILE_INDEX,
             in_paternal_bam=PATERNAL_INPUT_BAM_FILE,
