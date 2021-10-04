@@ -1,0 +1,21 @@
+{
+  "bmtbWorkflow.INPUT_PED_FILE": "gs://cmarkell-vg-wdl-dev/test_input_reads/HG002.ped",
+  "bmtbWorkflow.SNPEFF_DATABASE": "gs://cmarkell-vg-wdl-dev/grch38_inputs/snpEff_v5_0_GRCh38.99.zip",
+  "bmtbWorkflow.INPUT_VCF_FILE": "gs://cmarkell-vg-wdl-dev/test_input_reads/HG002_cohort.jointgenotyped.vcf.gz",
+  "bmtbWorkflow.CADD_LINES": 30000,
+  "bmtbWorkflow.CHROM_DIR": "gs://cmarkell-vg-wdl-dev/grch38_inputs/Chromosome_Files_hs38d1.tar.gz",
+  "bmtbWorkflow.EDIT_DIR": "gs://cmarkell-vg-wdl-dev/grch38_inputs/MultiEditor.tar.gz",
+  "bmtbWorkflow.GENOME_BUILD": "GRCh38",
+  "bmtbWorkflow.CADD_DATA": "gs://cmarkell-vg-wdl-dev/grch38_inputs/CADD-scripts-master.tar.gz",
+  "bmtbWorkflow.MATERNAL_INPUT_BAM_FILE": "gs://cmarkell-vg-wdl-dev/test_input_reads/HG004_merged.indel_realigned.bam",
+  "bmtbWorkflow.MATERNAL_INPUT_BAM_FILE_INDEX": "gs://cmarkell-vg-wdl-dev/test_input_reads/HG004_merged.indel_realigned.bam.bai",
+  "bmtbWorkflow.PATERNAL_INPUT_BAM_FILE": "gs://cmarkell-vg-wdl-dev/test_input_reads/HG003_merged.indel_realigned.bam",
+  "bmtbWorkflow.PATERNAL_INPUT_BAM_FILE_INDEX": "gs://cmarkell-vg-wdl-dev/test_input_reads/HG003_merged.indel_realigned.bam.bai",
+  "bmtbWorkflow.SIBLING_BAM_FILE_LIST": ["gs://cmarkell-vg-wdl-dev/test_input_reads/HG002_merged.indel_realigned.bam", "gs://cmarkell-vg-wdl-dev/test_input_reads/NA12878_merged.indel_realigned.bam"],
+  "bmtbWorkflow.SIBLING_BAM_FILE_INDEX_LIST": ["gs://cmarkell-vg-wdl-dev/test_input_reads/HG002_merged.indel_realigned.bam.bai", "gs://cmarkell-vg-wdl-dev/test_input_reads/NA12878_merged.indel_realigned.bam.bai"],
+  "bmtbWorkflow.SAMPLE_NAME_MATERNAL": "HG004",
+  "bmtbWorkflow.SAMPLE_NAME_PATERNAL": "HG003",
+  "bmtbWorkflow.SAMPLE_NAME_SIBLING_LIST": ["HG002", "NA12878"],
+  "bmtbWorkflow.GENDER_SIBLING_LIST": [0,0],
+  "bmtbWorkflow.AFFECTED_SIBLING_LIST": [0,1]
+}

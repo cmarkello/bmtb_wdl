@@ -8,10 +8,11 @@ workflow bmtbWorkflow {
     input {
         # MISC inputs
         File INPUT_PED_FILE                         # Input trio .ped file for mosaicism detection
+        File SNPEFF_DATABASE                        # Path to snpeff database .zip file for snpEff annotation functionality.
         
         # VCFtoShebang inputs
         File INPUT_VCF_FILE                         # Input cohort unrolled .vcf file
-        String BYPASS
+        String BYPASS = "False"
         Int CADD_LINES = 30000
         File CHROM_DIR
         File EDIT_DIR
@@ -34,6 +35,21 @@ workflow bmtbWorkflow {
         Array[Int]+ AFFECTED_SIBLING_LIST           # Input list of sibling affected states (0 = affected, 1 = unaffected). Must follow same order as SAMPLE_NAME_SIBLING_LIST
     }
     
+    # Run SNPEff Annotation
+    call normalizeVCF as normalizeCohortVCF {
+        input:
+            in_sample_name=SAMPLE_NAME_SIBLING_LIST[0],
+            in_bgzip_vcf_file=INPUT_VCF_FILE,
+            in_small_resources=false
+    }
+    call snpEffAnnotateVCF as snpEffAnnotateCohortVCF {
+        input:
+            in_sample_name=SAMPLE_NAME_SIBLING_LIST[0],
+            in_normalized_vcf_file=normalizeCohortVCF.output_normalized_vcf,
+            in_snpeff_database=SNPEFF_DATABASE,
+            in_small_resources=false
+    }
+
     # Remove the decoy contig
     call run_remove_decoy_contigs {
         input:
@@ -112,6 +128,87 @@ workflow bmtbWorkflow {
     output {
         File output_mosaicism_report = run_detect_mosaicism.outputMOSAICISMREPORT
         File output_vs = run_bmtb.outputVS
+    }
+}
+
+task normalizeVCF {
+    input {
+        String in_sample_name
+        File in_bgzip_vcf_file
+        Boolean in_small_resources
+    }
+
+    Int in_vgcall_cores = if in_small_resources then 6 else 6
+    Int in_vgcall_disk = if in_small_resources then 1 else 25
+    String in_vgcall_mem = if in_small_resources then "1" else "50"
+
+    command <<<
+        # Set the exit code of a pipeline to that of the rightmost command
+        # to exit with a non-zero status, or zero if all commands of the pipeline exit
+        set -o pipefail
+        # cause a bash script to exit immediately when a command fails
+        set -e
+        # cause the bash shell to treat unset variables as an error and exit immediately
+        set -u
+        # echo each line of the script to stdout so we can see what is happening
+        set -o xtrace
+        #to turn off echo do 'set +o xtrace'
+
+        bcftools norm -m-both --threads ~{in_vgcall_cores} -o ~{in_sample_name}.unrolled.vcf ~{in_bgzip_vcf_file}
+    >>>
+    output {
+        File output_normalized_vcf = "~{in_sample_name}.unrolled.vcf"
+    }
+    runtime {
+        preemptible: 1
+        cpu: in_vgcall_cores
+        memory: in_vgcall_mem + " GB"
+        disks: "local-disk " + in_vgcall_disk + " SSD"
+        docker: "quay.io/biocontainers/bcftools@sha256:95c212df20552fc74670d8f16d20099d9e76245eda6a1a6cfff4bd39e57be01b"
+    }
+}
+
+task snpEffAnnotateVCF {
+    input {
+        String in_sample_name
+        File in_normalized_vcf_file
+        File? in_snpeff_database
+        Boolean in_small_resources
+    }
+
+    Int in_vgcall_cores = if in_small_resources then 6 else 6
+    Int in_vgcall_disk = if in_small_resources then 10 else 25
+    String in_vgcall_mem = if in_small_resources then "10" else "50"
+
+    command <<<
+        # Set the exit code of a pipeline to that of the rightmost command
+        # to exit with a non-zero status, or zero if all commands of the pipeline exit
+        set -o pipefail
+        # cause a bash script to exit immediately when a command fails
+        set -e
+        # cause the bash shell to treat unset variables as an error and exit immediately
+        set -u
+        # echo each line of the script to stdout so we can see what is happening
+        set -o xtrace
+        #to turn off echo do 'set +o xtrace'
+
+        unzip ~{in_snpeff_database}
+        database_ref="GRCh38.99"
+        if [[ "~{in_snpeff_database}" != *"GRCh38"* ]]; then
+            database_ref="GRCh37.75"
+        fi
+        snpEff -Xmx40g -i VCF -o VCF -noLof -noHgvs -formatEff -classic -dataDir ${PWD}/data ${database_ref} ~{in_normalized_vcf_file} > ~{in_sample_name}.snpeff.unrolled.vcf
+        bgzip ~{in_sample_name}.snpeff.unrolled.vcf
+    >>>
+    output {
+        File output_snpeff_annotated_vcf = "~{in_sample_name}.snpeff.unrolled.vcf.gz"
+    }
+    runtime {
+        preemptible: 1
+        cpu: in_vgcall_cores
+        memory: in_vgcall_mem + " GB"
+        disks: "local-disk " + in_vgcall_disk + " SSD"
+        docker: "quay.io/biocontainers/snpeff:5.0--hdfd78af_1"
     }
 }
 
