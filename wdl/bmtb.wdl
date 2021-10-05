@@ -250,11 +250,13 @@ task run_detect_mosaicism {
         File in_cohort_vcf
     }
     String cohort_vcf_basename = basename(in_cohort_vcf, ".gz")
+    String pedfile_basename = basename(in_ped_file)
     command <<<
         set -exu -o pipefail
         
         cp /usr/src/app/phasing_config_file.txt .
-        sed -i "s|^PED_FILE.*|PED_FILE\t${PWD}/~{in_ped_file}|" phasing_config_file.txt
+        cp ~{in_ped_file} .
+        sed -i "s|^PED_FILE.*|PED_FILE\t${PWD}/~{pedfile_basename}|" phasing_config_file.txt
         sed -i "s|^VCF_FILE.*|VCF_FILE\t${PWD}/~{cohort_vcf_basename}|" phasing_config_file.txt
         sed -i "s|^OUTPUT_FILE.*|OUTPUT_FILE\t${PWD}/~{in_proband_name}_mosaicism_output.txt|" phasing_config_file.txt
         sed -i "s|^PROBAND_NAME.*|PROBAND_NAME\t~{in_proband_name}|" phasing_config_file.txt
@@ -324,7 +326,7 @@ task run_vcf2shebang {
         preemptible: 2
         memory: 100 + " GB"
         cpu: 8
-        disks: "local-disk 150 SSD"
+        disks: "local-disk 200 SSD"
         docker: "quay.io/cmarkello/vcf2shebang_grch38:latest"
     }
 }
