@@ -17,7 +17,7 @@ workflow bmtbWorkflow {
         
         # VCFtoShebang inputs
         File INPUT_VCF_FILE                         # Input cohort unrolled .vcf file
-        String BYPASS = "False"
+        String BYPASS = 'false'                     # Set to 'true' to bypass gender calling stage of vcftoshebang program
         Int CADD_LINES = 30000
         File CHROM_DIR
         File EDIT_DIR
@@ -295,12 +295,16 @@ task run_vcf2shebang {
         output_dir="vcf2shebang_output/"
         chrom_file_dir="$(basename ~{in_chrom_file_dir})"
         edit_dir="$(basename ~{in_edit_dir})"
+        bypass_conf = "NO"
+        if [[ ~{in_bypass} == "true" ]]; then
+            bypass_conf = "YES"
+        fi
         mkdir ${output_dir}
         cp /vcftoshebang/VCFtoShebang_Config.txt .
         sed -i "s|^PROBAND_NAME.*|PROBAND_NAME\t~{in_proband_name}|" VCFtoShebang_Config.txt
         sed -i "s|^OUTPUT_DIR.*|OUTPUT_DIR\t${output_dir}|" VCFtoShebang_Config.txt
         sed -i "s|^UNROLLED_VCF_PATH.*|UNROLLED_VCF_PATH\t~{cohort_vcf_basename}|" VCFtoShebang_Config.txt
-        sed -i "s|^BYPASS.*|BYPASS\t~{in_bypass}|" VCFtoShebang_Config.txt
+        sed -i "s|^BYPASS.*|BYPASS\t${bypass_conf}|" VCFtoShebang_Config.txt
         sed -i "s|^CADD_LINES.*|CADD_LINES\t~{in_cadd_lines}|" VCFtoShebang_Config.txt
         sed -i "s|^CHROM_DIR.*|CHROM_DIR\t$PWD/~{chrom_file_dir_basename}|" VCFtoShebang_Config.txt
         sed -i "s|^EDIT_DIR.*|EDIT_DIR\t$PWD/~{edit_dir_basename}|" VCFtoShebang_Config.txt
