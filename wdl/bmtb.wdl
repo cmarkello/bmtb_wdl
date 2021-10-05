@@ -267,9 +267,9 @@ task run_detect_mosaicism {
     }
     runtime {
         preemptible: 2
-        memory: 20 + " GB"
+        memory: 100 + " GB"
         cpu: 1
-        disks: "local-disk 20 SSD"
+        disks: "local-disk 100 SSD"
         docker: "quay.io/cmarkello/mosaicism_detector:latest"
     }
 }
