@@ -58,7 +58,7 @@ workflow bmtbWorkflow {
     # Remove the decoy contig
     call run_remove_decoy_contigs {
         input:
-            in_cohort_vcf=INPUT_VCF_FILE,
+            in_cohort_vcf=snpEffAnnotateCohortVCF.output_snpeff_annotated_vcf,
             in_genome_build=GENOME_BUILD
     }
     
@@ -67,7 +67,7 @@ workflow bmtbWorkflow {
         input:
             in_proband_name=SAMPLE_NAME_SIBLING_LIST[0],
             in_ped_file=INPUT_PED_FILE,
-            in_cohort_vcf=INPUT_VCF_FILE
+            in_cohort_vcf=snpEffAnnotateCohortVCF.output_snpeff_annotated_vcf
     }
     
     # Run VCFtoShebang conversion
