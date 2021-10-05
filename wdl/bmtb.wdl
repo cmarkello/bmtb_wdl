@@ -203,10 +203,9 @@ task snpEffAnnotateVCF {
             database_ref="GRCh37.75"
         fi
         snpEff -Xmx40g -i VCF -o VCF -noLof -noHgvs -formatEff -classic -dataDir ${PWD}/data ${database_ref} ~{in_normalized_vcf_file} > ~{in_sample_name}.snpeff.unrolled.vcf
-        bgzip ~{in_sample_name}.snpeff.unrolled.vcf
     >>>
     output {
-        File output_snpeff_annotated_vcf = "~{in_sample_name}.snpeff.unrolled.vcf.gz"
+        File output_snpeff_annotated_vcf = "~{in_sample_name}.snpeff.unrolled.vcf"
     }
     runtime {
         preemptible: 2
@@ -225,11 +224,10 @@ task run_remove_decoy_contigs {
     String cohort_vcf_basename = basename(in_cohort_vcf, ".gz")
     command <<<
         set -exu -o pipefail
-        bgzip -d ~{in_cohort_vcf}
         if [[ ~{in_genome_build} == *"GRCh38"* ]]; then
-            vcftools --vcf ~{cohort_vcf_basename} --not-chr hs38d1_decoys --recode-INFO-all --recode --out ~{cohort_vcf_basename}.filtered
+            vcftools --vcf ~{in_cohort_vcf} --not-chr hs38d1_decoys --recode-INFO-all --recode --out ~{cohort_vcf_basename}.filtered
         else
-            vcftools --vcf ~{cohort_vcf_basename} --not-chr hs37d5 --recode-INFO-all --recode --out ~{cohort_vcf_basename}.filtered
+            vcftools --vcf ~{in_cohort_vcf} --not-chr hs37d5 --recode-INFO-all --recode --out ~{cohort_vcf_basename}.filtered
         fi
         bgzip ~{cohort_vcf_basename}.filtered.recode.vcf
     >>>
