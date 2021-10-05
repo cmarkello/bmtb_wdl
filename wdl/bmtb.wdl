@@ -253,7 +253,6 @@ task run_detect_mosaicism {
     command <<<
         set -exu -o pipefail
         
-        bgzip -d ~{in_cohort_vcf}
         cp /usr/src/app/phasing_config_file.txt .
         sed -i "s|^PED_FILE.*|PED_FILE\t${PWD}/~{in_ped_file}|" phasing_config_file.txt
         sed -i "s|^VCF_FILE.*|VCF_FILE\t${PWD}/~{cohort_vcf_basename}|" phasing_config_file.txt
