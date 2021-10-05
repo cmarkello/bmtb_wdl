@@ -165,7 +165,7 @@ task normalizeVCF {
         File output_normalized_vcf = "~{in_sample_name}.unrolled.vcf"
     }
     runtime {
-        preemptible: 1
+        preemptible: 2
         cpu: in_vgcall_cores
         memory: in_vgcall_mem + " GB"
         disks: "local-disk " + in_vgcall_disk + " SSD"
@@ -209,7 +209,7 @@ task snpEffAnnotateVCF {
         File output_snpeff_annotated_vcf = "~{in_sample_name}.snpeff.unrolled.vcf.gz"
     }
     runtime {
-        preemptible: 1
+        preemptible: 2
         cpu: in_vgcall_cores
         memory: in_vgcall_mem + " GB"
         disks: "local-disk " + in_vgcall_disk + " SSD"
@@ -237,8 +237,10 @@ task run_remove_decoy_contigs {
         File filtered_cohort_vcf = "~{cohort_vcf_basename}.filtered.recode.vcf.gz"
     }
     runtime {
+        preemptible: 2
         memory: 20 + " GB"
         cpu: 1
+        disks: "local-disk 20 SSD"
         docker: "biocontainers/vcftools:v0.1.16-1-deb_cv1"
     }
 }
@@ -265,8 +267,10 @@ task run_detect_mosaicism {
         File outputMOSAICISMREPORT = "~{in_proband_name}_mosaicism_output.txt"
     }
     runtime {
+        preemptible: 2
         memory: 20 + " GB"
         cpu: 1
+        disks: "local-disk 20 SSD"
         docker: "quay.io/cmarkello/mosaicism_detector:latest"
     }
 }
@@ -320,8 +324,10 @@ task run_vcf2shebang {
         Boolean runCADD = read_boolean("vcf2shebang_output/cadd_input_available")
     }
     runtime {
+        preemptible: 2
         memory: 100 + " GB"
         cpu: 8
+        disks: "local-disk 150 SSD"
         docker: "quay.io/cmarkello/vcf2shebang_grch38:latest"
     }
 }
@@ -342,8 +348,10 @@ task run_split_vcf {
         Array[File] vcf_chunk_files = glob(".*tmp.*.vcf")
     }
     runtime {
+        preemptible: 2
         memory: 20 + " GB"
         cpu: 4
+        disks: "local-disk 20 SSD"
         docker: "ubuntu@sha256:2695d3e10e69cc500a16eae6d6629c803c43ab075fa5ce60813a0fc49c47e859"
     }
 }
@@ -365,8 +373,10 @@ task run_cadd {
         File outputCADD = glob("*_out.tsv.gz")[0]
     }
     runtime {
+        preemptible: 2
         memory: 100 + " GB"
         cpu: 6
+        disks: "local-disk 150 SSD"
         docker: "quay.io/cmarkello/cadd_1.6:latest"
     }
 }
@@ -391,8 +401,10 @@ task run_merge_annotated_vcf {
         File merged_cadd_output_vcf = "merged_CADDv1.6_offline_proper_format.vcf"
     }
     runtime {
+        preemptible: 2
         memory: 50 + " GB"
         cpu: 4
+        disks: "local-disk 100 SSD"
         docker: "quay.io/cmarkello/cadd_1.6:latest"
     }
 }
@@ -411,8 +423,10 @@ task run_cadd_editor {
         File cadd_editor_output_vs = "cadd_editor_output.vs"
     }
     runtime {
+        preemptible: 2
         memory: 20 + " GB"
         cpu: 2
+        disks: "local-disk 100 SSD"
         docker: "quay.io/cmarkello/cadd_editor:latest"
     }
 }
@@ -494,8 +508,10 @@ task run_bmtb {
         File outputVS = "~{proband_id}_BlackBox_Output.tar.gz"
     }
     runtime {
+        preemptible: 2
         memory: 100 + " GB"
         cpu: 6
+        disks: "local-disk 150 SSD"
         docker: "quay.io/cmarkello/bmtb_grch38:latest"
     }
 }
