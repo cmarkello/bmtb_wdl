@@ -295,9 +295,9 @@ task run_vcf2shebang {
         output_dir="vcf2shebang_output/"
         chrom_file_dir="$(basename ~{in_chrom_file_dir})"
         edit_dir="$(basename ~{in_edit_dir})"
-        bypass_conf = "NO"
+        bypass_conf="NO"
         if [[ ~{in_bypass} == "true" ]]; then
-            bypass_conf = "YES"
+            bypass_conf="YES"
         fi
         mkdir ${output_dir}
         cp /vcftoshebang/VCFtoShebang_Config.txt .
