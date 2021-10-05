@@ -221,7 +221,7 @@ task run_remove_decoy_contigs {
         File in_cohort_vcf
         String in_genome_build
     }
-    String cohort_vcf_basename = basename(in_cohort_vcf, ".gz")
+    String cohort_vcf_basename = basename(in_cohort_vcf)
     command <<<
         set -exu -o pipefail
         if [[ ~{in_genome_build} == *"GRCh38"* ]]; then
@@ -229,10 +229,9 @@ task run_remove_decoy_contigs {
         else
             vcftools --vcf ~{in_cohort_vcf} --not-chr hs37d5 --recode-INFO-all --recode --out ~{cohort_vcf_basename}.filtered
         fi
-        bgzip ~{cohort_vcf_basename}.filtered.recode.vcf
     >>>
     output {
-        File filtered_cohort_vcf = "~{cohort_vcf_basename}.filtered.recode.vcf.gz"
+        File filtered_cohort_vcf = "~{cohort_vcf_basename}.filtered.recode.vcf"
     }
     runtime {
         preemptible: 2
@@ -249,13 +248,14 @@ task run_detect_mosaicism {
         File in_ped_file
         File in_cohort_vcf
     }
-    String cohort_vcf_basename = basename(in_cohort_vcf, ".gz")
+    String cohort_vcf_basename = basename(in_cohort_vcf)
     String pedfile_basename = basename(in_ped_file)
     command <<<
         set -exu -o pipefail
         
         cp /usr/src/app/phasing_config_file.txt .
         cp ~{in_ped_file} .
+        cp ~{in_cohort_vcf} .
         sed -i "s|^PED_FILE.*|PED_FILE\t${PWD}/~{pedfile_basename}|" phasing_config_file.txt
         sed -i "s|^VCF_FILE.*|VCF_FILE\t${PWD}/~{cohort_vcf_basename}|" phasing_config_file.txt
         sed -i "s|^OUTPUT_FILE.*|OUTPUT_FILE\t${PWD}/~{in_proband_name}_mosaicism_output.txt|" phasing_config_file.txt
@@ -283,7 +283,7 @@ task run_vcf2shebang {
         File in_chrom_file_dir
         File in_edit_dir
     }
-    String cohort_vcf_basename = basename(in_cohort_vcf, ".gz")
+    String cohort_vcf_basename = basename(in_cohort_vcf)
     String chrom_file_dir_basename = basename(in_chrom_file_dir, ".tar.gz")
     String edit_dir_basename = basename(in_edit_dir, ".tar.gz")
     command <<<
@@ -291,7 +291,7 @@ task run_vcf2shebang {
         
         tar -xzf ~{in_chrom_file_dir}
         tar -xzf ~{in_edit_dir}
-        bgzip -d ~{in_cohort_vcf}
+        cp ~{in_cohort_vcf} .
         output_dir="vcf2shebang_output/"
         chrom_file_dir="$(basename ~{in_chrom_file_dir})"
         edit_dir="$(basename ~{in_edit_dir})"
