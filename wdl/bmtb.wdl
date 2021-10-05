@@ -326,7 +326,7 @@ task run_vcf2shebang {
         preemptible: 2
         memory: 100 + " GB"
         cpu: 8
-        disks: "local-disk 200 SSD"
+        disks: "local-disk 400 SSD"
         docker: "quay.io/cmarkello/vcf2shebang_grch38:latest"
     }
 }
