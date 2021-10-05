@@ -5,6 +5,11 @@ version 1.0
 ## Description: Core black magic toolbox workflow for pedigree datasets
 
 workflow bmtbWorkflow {
+    meta {
+        author: "Charles Markello"
+        email: "cmarkell@ucsc.edu"
+        description: "Core candidate variant analysis workflow for pedigree datasets."
+    }
     input {
         # MISC inputs
         File INPUT_PED_FILE                         # Input trio .ped file for mosaicism detection
