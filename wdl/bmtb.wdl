@@ -340,12 +340,13 @@ task run_split_vcf {
         File in_vcf
         Int in_split_lines
     }
-    String vcf_basename = basename(in_vcf, ".tar.gz")
+    String vcf_basename = basename(in_vcf, ".txt.gz")
     command <<<
         set -exu -o pipefail
         
         tempname="~{vcf_basename}_tmp"
         zcat ~{in_vcf} | grep -v '^GL|^#' | cut -f 1-5 | split -l ~{in_split_lines} --additional-suffix=".vcf" -d - ${tempname}
+        ls -l
     >>>
     output {
         Array[File] vcf_chunk_files = glob(".*tmp.*.vcf")
