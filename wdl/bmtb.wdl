@@ -347,9 +347,10 @@ task run_split_vcf {
         tempname="~{vcf_basename}_tmp"
         zcat ~{in_vcf} | grep -v '^GL|^#' | cut -f 1-5 | split -l ~{in_split_lines} --additional-suffix=".vcf" -d - ${tempname}
         ls -l
+        echo $PWD
     >>>
     output {
-        Array[File] vcf_chunk_files = glob(".*tmp.*.vcf")
+        Array[File] vcf_chunk_files = glob("*tmp*.vcf")
     }
     runtime {
         preemptible: 2
