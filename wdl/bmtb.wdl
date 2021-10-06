@@ -340,11 +340,11 @@ task run_split_vcf {
         File in_vcf
         Int in_split_lines
     }
+    String vcf_basename = basename(in_vcf, ".tar.gz")
     command <<<
         set -exu -o pipefail
         
-        base=$(basename -s .vcf "~{in_vcf}")
-        tempname="${base}_tmp"
+        tempname="~{vcf_basename}_tmp"
         zcat ~{in_vcf} | grep -v '^GL|^#' | cut -f 1-5 | split -l ~{in_split_lines} --additional-suffix=".vcf" -d - ${tempname}
     >>>
     output {
