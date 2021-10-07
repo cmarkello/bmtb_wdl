@@ -393,7 +393,7 @@ task run_merge_annotated_vcf {
     command <<<
         set -exu -o pipefail
         
-        
+        source activate /opt/conda/envs/cadd-env
         for cadd_output_chunk in $(ls ~{sep=" " in_cadd_output_chunks} | sort) ; do
             zcat ${cadd_output_chunk} >> merged_CADDv1.6_offline_unsorted
         done
