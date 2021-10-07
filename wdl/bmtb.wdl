@@ -18,7 +18,7 @@ workflow bmtbWorkflow {
         # VCFtoShebang inputs
         File INPUT_VCF_FILE                         # Input cohort unrolled .vcf file
         String BYPASS = 'false'                     # Set to 'true' to bypass gender calling stage of vcftoshebang program
-        Int CADD_LINES = 30000
+        Int CADD_LINES = 60000
         File CHROM_DIR
         File EDIT_DIR
         
