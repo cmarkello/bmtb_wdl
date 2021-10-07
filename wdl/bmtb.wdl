@@ -381,7 +381,7 @@ task run_cadd {
         preemptible: 2
         memory: 100 + " GB"
         cpu: 6
-        disks: "local-disk 400 SSD"
+        disks: "local-disk 600 SSD"
         docker: "quay.io/cmarkello/cadd_1.6:latest"
     }
 }
