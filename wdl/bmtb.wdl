@@ -457,12 +457,12 @@ task run_bmtb {
     
     command <<<
         set -exu -o pipefail
-        
-        ln -s ~{in_maternal_bam} input_maternal.bam
-        ln -s ~{in_maternal_bam_index} input_maternal.bam.bai
-        ln -s ~{in_paternal_bam} input_paternal.bam
-        ln -s ~{in_paternal_bam_index} input_paternal.bam.bai
-        ln -s ~{in_vs_file} input_vs.vs
+        ls -lh
+        cp ~{in_maternal_bam} input_maternal.bam
+        cp ~{in_maternal_bam_index} input_maternal.bam.bai
+        cp ~{in_paternal_bam} input_paternal.bam
+        cp ~{in_paternal_bam_index} input_paternal.bam.bai
+        cp ~{in_vs_file} input_vs.vs
         
         cp -r /bmtb/Configs $PWD/Configs
         rm -f ${PWD}/Configs/BAM_Directory_Config.txt
