@@ -516,7 +516,7 @@ task run_bmtb {
         preemptible: 2
         memory: 100 + " GB"
         cpu: 6
-        disks: "local-disk 150 SSD"
+        disks: "local-disk 300 SSD"
         docker: "quay.io/cmarkello/bmtb_grch38:latest"
     }
 }
