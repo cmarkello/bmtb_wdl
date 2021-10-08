@@ -464,7 +464,8 @@ task run_bmtb {
         ln -s ~{in_paternal_bam_index} input_paternal.bam.bai
         ln -s ~{in_vs_file} input_vs.vs
         
-        rm ${PWD}/Configs/BAM_Directory_Config.txt
+        cp -r /bmtb/Configs $PWD/Configs
+        rm -f ${PWD}/Configs/BAM_Directory_Config.txt
         touch ${PWD}/Configs/BAM_Directory_Config.txt
         echo -e "~{in_maternal_id}\t${PWD}/input_maternal.bam" >> ${PWD}/Configs/BAM_Directory_Config.txt
         echo -e "~{in_paternal_id}\t${PWD}/input_paternal.bam" >> ${PWD}/Configs/BAM_Directory_Config.txt 
