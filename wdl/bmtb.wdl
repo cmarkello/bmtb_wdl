@@ -399,7 +399,7 @@ task run_merge_annotated_vcf {
         done
         sort -k1,1 -k2,2n merged_CADDv1.6_offline_unsorted > merged_CADDv1.6_offline.vcf && \
         rm -f merged_CADDv1.6_offline_unsorted && \
-        python3 /usr/src/app/CADD_offline_mito_postprocessing.py -c /usr/src/app/whole_mito_SNP_pp2_predictions_sorted.txt -i merged_CADDv1.6_offline.vcf -o merged_CADDv1.6_offline_proper_format.vcf && \
+        python /usr/src/app/CADD_offline_mito_postprocessing.py -c /usr/src/app/whole_mito_SNP_pp2_predictions_sorted.txt -i merged_CADDv1.6_offline.vcf -o merged_CADDv1.6_offline_proper_format.vcf && \
         rm -f merged_CADDv1.6_offline.vcf
     >>>
     output {
